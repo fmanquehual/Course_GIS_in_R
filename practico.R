@@ -5,6 +5,10 @@
 # install.packages('gdistance')
 # install.packages('prettymapr')
 
+# plantear el problema
+# decir que las coberturas vectoriales las debo rasterizar y reclasificar
+# tener una imagen preparada para mostrar las consecuencias de dissolve=TRUE EN RED VIAL
+
 library(raster) # lectura y herramientas para coberturas raster
 library(rgdal) # lectura de coberturas vectoriales 
 library(rgeos) # herramientas SIG
@@ -12,8 +16,8 @@ library(dplyr) # join entre db de cobertura y data frame
 library(gdistance) # Para calculo del camino mas corto
 library(prettymapr) # barra de escala y Norte
 
-rm(list=ls())
-dev.off()
+# rm(list=ls())
+# dev.off()
 
 wgs84 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" #coordenadas geograficas WGS84
 utm18 <- "+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0" #utm zona 18 sur con datum WGS84
@@ -49,7 +53,7 @@ setwd('C:/Users/Francisco/Documents/Curso_SIG_en_R/coberturas/')
 dem <- raster('9.jp2')
 crs(dem)
 
-compareCRS(dem, utm18)
+compareCRS(dem, lim.comuna)
 
 lim.comuna.utm18 <- spTransform(lim.comuna, utm18)
 
@@ -84,7 +88,10 @@ plot(lim.comuna)
 plot(red.vial.comuna, lty = 2, col = 'red', add = TRUE)
 
 red.vial.comuna.utm18 <- spTransform(red.vial.comuna, utm18)
+
+
 red.vial.comuna.utm18.buffer <- buffer(red.vial.comuna.utm18, width=12.5, dissolve = FALSE)
+plot(red.vial.comuna.utm18.buffer)
 
 head(red.vial.comuna.utm18.buffer@data)
 red.vial.comuna.utm18.buffer@data$valor <- 0
@@ -157,7 +164,7 @@ subuso.id <- data.frame(id=1:longitud.subuso, SUBUSO=categorias.subuso)
 head(subuso.id)
 
 cbn@data <- left_join(cbn@data, subuso.id, by='SUBUSO')
-head(cbn)
+head(cbn@data)
 
 cbn.comuna <- crop(cbn, lim.comuna.utm18)
 r.cbn.comuna <- rasterize(cbn.comuna, dem.comuna, field="id", fun="last", background=NA)
@@ -225,13 +232,14 @@ pre.m3 <- c( ids.comuna[1], ids.comuna[1], 100000,
              ids.comuna[11], ids.comuna[11], 500000,
              ids.comuna[12], ids.comuna[12], 5000,
              ids.comuna[13], ids.comuna[13], 800,
-             ids.comuna[1], ids.comuna[1], 10000)
+             ids.comuna[14], ids.comuna[14], 10000)
 
 m3 <- matrix(pre.m3, ncol=3, byrow=TRUE)
 reclas.cbn.comuna <- reclassify(r.cbn.comuna, m3, include.lowest=TRUE)
 
 plot(reclas.cbn.comuna)
 hist(reclas.cbn.comuna)
+
 
 # red vial
 plot(r.red.vial.comuna.utm18)
@@ -249,7 +257,7 @@ plot(r.costo)
 plot(red.vial.comuna.utm18, lty = 2, col = 'red', add=TRUE)
 zoom(r.costo, ext=drawExtent())
 
-#writeRaster(r.cost, filename="r_rural.tif", format="GTiff", overwrite=TRUE)
+# writeRaster(r.costo, filename="r_costo.tif", format="GTiff", overwrite=TRUE)
 
 # fin ---
 

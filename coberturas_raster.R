@@ -103,8 +103,14 @@ myTheme <- rasterTheme(region = myPal)
 my.at <- seq(0, 40, by=1) # breaks para la leyenda
 unidad.variable <- '°C'
 
+# setwd('C:/Users/Francisco/Documents/Curso_SIG_en_R/plots/')
+# png('tmax_futuro_levelplot_720px.png', width = 720, height = 720, units = "px")
+
 levelplot(t.max.futuro.clip, par.settings=myTheme, colorkey=list(space='right'), 
+          main = 'Temperatura máxima esperada a fines del siglo XXI',
           xlab = '', ylab = unidad.variable, at=my.at)
+
+# dev.off()
 
 levelplot(t.max.futuro.clip, layer = 1, margin = list(FUN = median, axis = TRUE, 
                                            scales = list(x=c(0, 40),
@@ -143,6 +149,9 @@ head(db.t.max.futuro)
 # boxplot ----
 mar.i <- 0
 
+# setwd('C:/Users/Francisco/Documents/Curso_SIG_en_R/plots/')
+# pdf('boxplots_tmax.pdf')
+
 par(mfrow=c(1,2), oma=c(6,4,1,1), mar=c(mar.i,mar.i,mar.i,mar.i))
 
 boxplot(db.t.max.historico, ylim=c(0, 40), las=2)
@@ -151,6 +160,8 @@ mtext('Historico', side=3, line = -2)
 
 boxplot(db.t.max.futuro, yaxt='n', las=2)
 mtext('2081-2100', side=3, line = -2)
+
+# dev.off()
 
 # fin ---
 
@@ -203,7 +214,7 @@ unique(db.t.max.historico.full$mes)
 db.t.max.historico.full$mes <- factor( db.t.max.historico.full$mes, levels = rev(meses.anho) )
 levels(db.t.max.historico.full$mes)
 
-map.historico <- ggplot(db.t.max.historico.full, aes(x = valor, y=mes, fill = stat(x))) + 
+ggplot(db.t.max.historico.full, aes(x = valor, y=mes, fill = stat(x))) + 
   geom_density_ridges_gradient(scale = 3, rel_min_height = 0.01) +
   scale_fill_gradientn(unidad.variable, colours = myPal) +
   xlim(0, 40) +
@@ -217,35 +228,64 @@ map.historico <- ggplot(db.t.max.historico.full, aes(x = valor, y=mes, fill = st
 # graficos de densidad futuro ----
 
 # enero
-t.max.futuro.clip.1 <- round( as.data.frame(t.max.futuro.clip[[1]], na.rm = TRUE), 1)
-head(t.max.futuro.clip.1)
+db.t.max.futuro.1 <- round( as.data.frame(t.max.futuro.clip[[1]], na.rm = TRUE), 1)
+head(db.t.max.futuro.1)
 
-t.max.futuro.clip.1$mes <- colnames(t.max.futuro.clip.1)
-head(t.max.futuro.clip.1)
+db.t.max.futuro.1$mes <- colnames(db.t.max.futuro.1)
+head(db.t.max.futuro.1)
 
-colnames(t.max.futuro.clip.1)[1] <- 'valor'
-head(t.max.futuro.clip.1)
+colnames(db.t.max.futuro.1)[1] <- 'valor'
+head(db.t.max.futuro.1)
 
 
-t.max.futuro.clip.full0 <- c()
+db.t.max.futuro.full0 <- c()
 for (i in 2:12) {
-  t.max.futuro.clip.i <- round( as.data.frame(t.max.historico.clip[[i]], na.rm = TRUE), 1)
-  t.max.futuro.clip.i$mes <- colnames(t.max.futuro.clip.i)
-  colnames(t.max.futuro.clip.i)[1] <- 'valor'  
+  db.t.max.futuro.i <- round( as.data.frame(t.max.futuro.clip[[i]], na.rm = TRUE), 1)
+  db.t.max.futuro.i$mes <- colnames(db.t.max.futuro.i)
+  colnames(db.t.max.futuro.i)[1] <- 'valor'  
   
-  t.max.futuro.clip.full0 <- rbind(t.max.futuro.clip.full0, t.max.futuro.clip.i)
+  db.t.max.futuro.full0 <- rbind(db.t.max.futuro.full0, db.t.max.futuro.i)
 }
 
-t.max.futuro.clip.full <- rbind(t.max.futuro.clip.1, t.max.futuro.clip.full0)
-t.max.futuro.clip.full$mes <- factor( t.max.futuro.clip.full$mes, levels = rev(meses.anho) )
-levels(t.max.futuro.clip.full$mes)
+db.t.max.futuro.full <- rbind(db.t.max.futuro.1, db.t.max.futuro.full0)
+db.t.max.futuro.full$mes <- factor( db.t.max.futuro.full$mes, levels = rev(meses.anho) )
+levels(db.t.max.futuro.full$mes)
 
-map.futuro <- ggplot(t.max.futuro.clip.full, aes(x = valor, y=mes, fill = stat(x))) + 
+ggplot(db.t.max.futuro.full, aes(x = valor, y=mes, fill = stat(x))) + 
   geom_density_ridges_gradient(scale = 3, rel_min_height = 0.01) +
   scale_fill_gradientn(unidad.variable, colours = myPal) +
-  xlim(0, 40) +
   labs(title = 'Futuro (1981-2100)', x = unidad.variable, y = NULL) +
   theme_bw() 
+
+# fin ---
+
+
+
+# Distribucion de tmax historico vs futuro ---- 
+db.t.max.historico.full$periodo <- 'Historico'
+db.t.max.futuro.full$periodo <- 'Futuro'
+
+db.t.max.full <- rbind(db.t.max.historico.full, db.t.max.futuro.full)
+head(db.t.max.full)
+table(db.t.max.full$periodo)
+
+db.t.max.full$periodo <- factor( db.t.max.full$periodo, levels = c('Historico', 'Futuro') )
+levels(db.t.max.full$periodo)
+
+distribucion.hist.futu <- ggplot(db.t.max.full, aes(x = valor, y=mes, fill = stat(x))) + 
+  geom_density_ridges_gradient(scale = 3, rel_min_height = 0.01) +
+  scale_fill_gradientn(unidad.variable, colours = myPal) +
+  labs(x = unidad.variable, y = NULL) +
+  theme_dark() +
+  facet_wrap(~periodo, nrow = 2)
+
+# setwd('C:/Users/Francisco/Documents/Curso_SIG_en_R/plots/')
+# png('distribucion_tmax_historico_vs_futuro_480px.png', width = 480, height = 480, units = "px")
+# pdf('distribucion_tmax_historico_vs_futuro.pdf')
+
+distribucion.hist.futu
+
+# dev.off()
 
 # fin ---
 
@@ -280,3 +320,4 @@ levelplot(t.max.hist.futu.diferencia, margin = list(FUN = median, axis = TRUE,
           main='Diferencia entre temperatura historica y esperada (2081-2100)')
 
 # fin ---
+
