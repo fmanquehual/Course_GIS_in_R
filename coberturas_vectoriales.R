@@ -1,20 +1,43 @@
+# Curso de SIG en R.                                 //
+# Bloque 1: capas vectoriales.                      //
+# Autor: Francisco Fernando Manquehual Cheuque.    //  
+# Fecha de ultima modificacion: 17-07-2020.       //
+# /////////////////////////////////////////////////
+
+# Instalar los siguientes paquetes ----
+
 # install.packages('raster')
 # install.packages('rgdal')
 # install.packages('rgeos')
 # install.packages('prettymapr')
+# install.packages('ggplot2')
 
-library(raster) # lectura y herramientas para coberturas raster
+# fin ---
+
+
+
+
+# cargar librerias ----
+
+library(raster) # lectura y herramientas para coberturas raster y vectoriales
 library(rgdal) # lectura de coberturas vectoriales 
 library(rgeos) # herramientas SIG
 library(prettymapr) # barra de escala y Norte
 library(ggplot2) # Para elaboracion de graficos
 
-# rm(list=ls())
-# dev.off()
+# fin ---
+
+
+
+
+# Sistemas de coordenadas que se utilizaran ----
 
 wgs84 <- "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0" #coordenadas geograficas WGS84
 utm18 <- "+proj=utm +zone=18 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0" #utm zona 18 sur con datum WGS84
-utm19 <- "+proj=utm +zone=19 +south +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0" #utm zona 19 sur con datum WGS84
+
+# fin ---
+
+
 
 
 # Division administrativa ----
