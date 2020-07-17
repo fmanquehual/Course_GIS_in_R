@@ -4,6 +4,9 @@
 # Fecha de ultima modificacion: 17-07-2020.       //
 # /////////////////////////////////////////////////
 
+
+
+
 # Instalar los siguientes paquetes ----
 
 # install.packages('raster')
@@ -17,7 +20,7 @@
 
 
 
-# cargar librerias ----
+# Cargar librerias ----
 
 library(raster) # lectura y herramientas para coberturas raster y vectoriales
 library(rgdal) # lectura de coberturas vectoriales 
@@ -272,7 +275,7 @@ plot(hospitales.09.utm18, pch = 16, add = TRUE)
 
 
 
-# mapa a nivel regional ----
+# Mapa a nivel regional ----
 
 # setwd('C:/Users/Usuario/Documents/Francisco/curso_SIG_en_R/plots/')
 # png('mapa_09_con_red_vial_y_hospitales.png', width = 600, height = 600, units = "px")
@@ -453,7 +456,7 @@ text(hospitales.comuna.utm18, pos = 3, labels = etiqueta.hospital,
 
 
 
-# mapa comunal ----
+# Mapa comunal ----
 
 # setwd('C:/Users/Usuario/Documents/Francisco/curso_SIG_en_R/plots/')
 # png('mapa_comuna_Villarrica_con_red_vial_y_hospitales.png', width = 600, height = 600, units = "px")

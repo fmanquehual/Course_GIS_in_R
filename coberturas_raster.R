@@ -4,6 +4,9 @@
 # Fecha de ultima modificacion: 17-07-2020.       //
 # /////////////////////////////////////////////////
 
+
+
+
 # Instalar los siguientes paquetes ----
 
 # install.packages('raster')
@@ -21,7 +24,7 @@
 
 
 
-# cargar librerias ----
+# Cargar librerias ----
 
 library(raster) # lectura y herramientas para coberturas raster y vectoriales
 library(rgdal) # lectura de coberturas vectoriales 
@@ -293,7 +296,7 @@ mtext('2081-2100', side=3, line = -2)
 
 
 
-# graficos de densidad historico ----
+# Graficos de densidad historico ----
 
 # Enero
 
@@ -367,7 +370,7 @@ ggplot(db.t.max.historico.full, aes(x = valor, y = mes, fill = stat(x))) +
 
 
 
-# graficos de densidad futuro ----
+# Graficos de densidad futuro ----
 
 # Enero
 
