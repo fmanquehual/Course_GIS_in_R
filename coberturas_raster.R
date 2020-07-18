@@ -154,6 +154,24 @@ plot(t.max.futuro.clip, 3:6)
 
 
 
+# Ejemplo reprojeccion ----
+
+
+t.max.historico.clip.utm18 <- projectRaster(t.max.historico.clip, crs = utm18)
+
+crs(t.max.historico.clip)
+crs(t.max.historico.clip.utm18)
+
+par(mfrow = c(1, 2))
+plot(t.max.historico.clip, main = 'Enero - WGS84', 1)
+plot(t.max.historico.clip.utm18, main = 'Enero - WGS84 UTM 18S', 1)
+
+
+# fin ---
+
+
+
+
 # Diferentes tipos de mapas ----
 
 # configuraciones previas 
